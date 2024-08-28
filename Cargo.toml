@@ -4,6 +4,10 @@ version = "0.1.0"
 edition = "2021"
 authors = ["mxxntype <59417007+mxxntype@users.noreply.github.com>"]
 
+[[bin]]
+name = "hypr-toolbox"
+path = "src/main.rs"
+
 [lints.rust]
 unsafe_code = "forbid"
 
@@ -18,3 +22,5 @@ option_if_let_else = { level = "allow", priority = 1 }
 or_fun_call = { level = "allow", priority = 1 }
 
 [dependencies]
+clap = { version = "4.5.16", features = ["derive", "color"] }
+color-eyre = "0.6.3"
