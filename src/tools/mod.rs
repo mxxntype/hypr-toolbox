@@ -1,4 +1,6 @@
-use clap::{Subcommand, ValueEnum};
+pub mod query;
+
+use clap::Subcommand;
 
 /// The set of tools this crate provides.
 #[derive(Subcommand, Debug, Clone, PartialEq, Eq)]
@@ -23,6 +25,7 @@ pub enum Tool {
     /// TODO: Well, actually implement.
     Query {
         /// The type of query that should be performed.
+        #[command(subcommand)]
         query_type: QueryType,
 
         /// Whether to await wait for subsequent changes or query once and exit.
@@ -39,10 +42,16 @@ pub enum Tool {
 }
 
 /// Types of queries that the `query` tool can perform.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Subcommand)]
 pub enum QueryType {
     ActiveWindow,
+
     ActiveWorkspace,
+
     KeyboardLayout,
-    Workspaces,
+
+    Workspaces {
+        #[arg(long, default_value_t = false)]
+        skip_missing: bool,
+    },
 }

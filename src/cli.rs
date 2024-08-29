@@ -10,9 +10,9 @@ use clap::Parser;
 pub struct Options {
     /// Which tool to run this time.
     #[command(subcommand)]
-    tool: Tool,
+    pub tool: Tool,
 
     /// Whether to enable debug logging of the tools' internal events.
     #[arg(long, short, default_value_t = false)]
-    verbose: bool,
+    pub verbose: bool,
 }
