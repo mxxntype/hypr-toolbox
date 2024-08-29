@@ -42,13 +42,16 @@ pub enum Tool {
 }
 
 /// Types of queries that the `query` tool can perform.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Subcommand)]
+#[derive(Debug, Clone, PartialEq, Eq, Subcommand)]
 pub enum QueryType {
     ActiveWindow,
 
     ActiveWorkspace,
 
-    KeyboardLayout,
+    KeyboardLayout {
+        #[arg(short('p'), long, default_value = None)]
+        name_pattern: Option<String>,
+    },
 
     Workspaces {
         #[arg(long, default_value_t = false)]

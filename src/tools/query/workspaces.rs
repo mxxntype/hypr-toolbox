@@ -3,10 +3,34 @@ use hyprland::shared::{Address, HyprData};
 
 /// Get the list of workspaces the compositor holds.
 ///
+/// By default, Hyprland doesn't return workspaces that have no
+/// open windows, which might be inconvenient for some usecases.
+/// This function inserts "dummy" workspaces so that the user
+/// always gets back all workspaces 1-10.
+/// Pass `skip_missing = false` to disable this behaviour.
+///
 /// # Errors
 ///
 /// This function will propagate any errors that occur while
 /// querying the compositor through the [`hyprland`] crate.
+///
+/// # Examples
+///
+/// ```rust
+/// // This doctest will fail if Hyprland is not running!
+///
+/// use hyprland::data::{Workspace, Workspaces};
+/// use hyprland::shared::{Address, HyprData};
+/// use hypr_toolbox::tools::query::workspaces;
+///
+/// # fn main() -> hyprland::Result<()> {
+/// let workspaces: Vec<Workspace> = workspaces::get(false)?;
+///
+/// assert!(!workspaces.is_empty());
+/// assert_eq!(workspaces.len(), 10);
+/// # Ok(())
+/// # }
+/// ```
 pub fn get(skip_missing: bool) -> hyprland::Result<Vec<Workspace>> {
     let mut workspaces: Vec<Workspace> =
         Workspaces::get().map(|workspaces| workspaces.into_iter().collect())?;

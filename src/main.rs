@@ -1,11 +1,12 @@
 use clap::Parser;
 use hypr_toolbox::cli::Options;
+use hypr_toolbox::tools::query::keyboard;
 use hypr_toolbox::tools::{query::workspaces, QueryType, Tool};
 use hyprland::event_listener::EventListener;
 use serde_json::to_string_pretty as to_json;
 
 macro_rules! create_and_call_handler {
-    ($name:ident, $closure_definition:expr) => {{
+    ($closure_definition:expr) => {{
         let closure = $closure_definition;
         closure();
         closure
@@ -25,26 +26,42 @@ fn main() {
         Tool::Query {
             query_type,
             subscribe,
-        } => match query_type {
-            QueryType::ActiveWindow => todo!(),
+        } => {
+            match query_type {
+                QueryType::ActiveWindow => todo!(),
 
-            QueryType::ActiveWorkspace => todo!(),
+                QueryType::ActiveWorkspace => todo!(),
 
-            QueryType::KeyboardLayout => todo!(),
+                QueryType::KeyboardLayout { name_pattern } => {
+                    let handler = create_and_call_handler!(move || {
+                        println!(
+                            "{}",
+                            to_json(&keyboard::get(name_pattern.as_ref()).unwrap()).unwrap()
+                        );
+                    });
 
-            QueryType::Workspaces { skip_missing } => {
-                let handler = create_and_call_handler!(handler, move || {
-                    println!(
-                        "{}",
-                        to_json(&workspaces::get(skip_missing).unwrap()).unwrap()
-                    );
-                });
-
-                if subscribe {
-                    event_listener.add_workspace_added_handler(move |_| handler());
-                    event_listener.start_listener().unwrap();
+                    if subscribe {
+                        event_listener.add_keyboard_layout_change_handler(move |_| handler());
+                    }
                 }
+
+                QueryType::Workspaces { skip_missing } => {
+                    let handler = create_and_call_handler!(move || {
+                        println!(
+                            "{}",
+                            to_json(&workspaces::get(skip_missing).unwrap()).unwrap()
+                        );
+                    });
+
+                    if subscribe {
+                        event_listener.add_workspace_added_handler(move |_| handler());
+                    }
+                }
+            };
+
+            if subscribe {
+                event_listener.start_listener().unwrap();
             }
-        },
+        }
     }
 }
