@@ -28,7 +28,7 @@ pub enum Tool {
         #[command(subcommand)]
         query_type: QueryType,
 
-        /// Whether to await wait for subsequent changes or query once and exit.
+        /// Whether to wait for subsequent changes or query once and exit.
         ///
         /// Without this flag, the tool will only check the check the state once,
         /// return it to the issuer and exit. If this flag will passed, changes
@@ -48,11 +48,17 @@ pub enum QueryType {
 
     ActiveWorkspace,
 
+    /// Get the current keyboard layout name.
     KeyboardLayout {
-        #[arg(short('p'), long, default_value = None)]
-        name_pattern: Option<String>,
+        /// A pattern that will be used to find a specific keyboard's
+        /// layout; if none is passed, the function will look for a
+        /// keyboard with the name "at-translated-set-2-keyboard",
+        /// which seems to be the name for the main keyboard.
+        #[arg(short('p'), long, default_value = "at-translated-set-2-keyboard")]
+        name_pattern: String,
     },
 
+    /// Get the list of workspaces the compositor holds.
     Workspaces {
         #[arg(long, default_value_t = false)]
         skip_missing: bool,

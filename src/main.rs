@@ -36,7 +36,7 @@ fn main() {
                     let handler = create_and_call_handler!(move || {
                         println!(
                             "{}",
-                            to_json(&keyboard::get(name_pattern.as_ref()).unwrap()).unwrap()
+                            to_json(&keyboard::get(name_pattern.as_str()).unwrap()).unwrap()
                         );
                     });
 

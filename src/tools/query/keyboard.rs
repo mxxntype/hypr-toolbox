@@ -3,11 +3,6 @@ use std::str::pattern::Pattern;
 
 /// Get the current keyboard layout name.
 ///
-/// You can pass a pattern that will be used to look for a specific
-/// keyboard's layout; if [`None`] is passed, the function will look
-/// for a keyboard with the name `"at-translated-set-2-keyboard"`,
-/// which seems to be the name for the main keyboard. The reason
-/// for this weird (to me its weird, at least) behaviour is that
 /// Hyprland treats a lot of other devices as keyboards, for example:
 ///
 /// ```not-rust
@@ -38,16 +33,13 @@ use std::str::pattern::Pattern;
 /// This function may return `Ok(None)` if none of the keyboards'
 /// names returned by the compositor match the provided pattern.
 #[allow(clippy::needless_pass_by_value)]
-pub fn get<P>(keyboard_name_pattern: Option<P>) -> hyprland::Result<Option<String>>
+pub fn get<P>(keyboard_name_pattern: P) -> hyprland::Result<Option<String>>
 where
     P: Pattern + Clone,
 {
     let mut keyboards = Devices::get()?.keyboards;
 
-    keyboards.retain(|keyboard| match &keyboard_name_pattern {
-        Some(pattern) => keyboard.name.contains(pattern.clone()),
-        None => keyboard.name.contains("at-translated-set-2-keyboard"),
-    });
+    keyboards.retain(|keyboard| keyboard.name.contains(keyboard_name_pattern.clone()));
 
     match keyboards.first() {
         None => Ok(None),
