@@ -1,7 +1,6 @@
 use clap::Parser;
-use hypr_toolbox::cli::Options;
-use hypr_toolbox::tools::query::keyboard;
-use hypr_toolbox::tools::{query::workspaces, QueryType, Tool};
+use hypr_toolbox::cli::{Options, QueryType, Tool};
+use hypr_toolbox::query::{keyboard, workspaces};
 use hyprland::event_listener::EventListener;
 use serde_json::to_string_pretty as to_json;
 

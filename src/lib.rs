@@ -5,4 +5,4 @@
 #![feature(pattern)]
 
 pub mod cli;
-pub mod tools;
+pub mod query;
