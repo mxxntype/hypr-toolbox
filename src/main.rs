@@ -2,6 +2,7 @@ mod cli;
 
 use crate::cli::{Options, QueryType, Tool};
 use clap::Parser;
+use hypr_toolbox::profile;
 use hypr_toolbox::query::{active_workspace, keyboard, workspaces};
 use hyprland::event_listener::EventListener;
 use serde_json::to_string_pretty as to_json;
@@ -24,7 +25,11 @@ fn main() {
 
     let mut event_listener = EventListener::new();
     match options.tool {
-        Tool::Profile {} => todo!(),
+        Tool::Profile {} => {
+            let config = profile::Config::default();
+            profile::setup_listener(&mut event_listener, config);
+            event_listener.start_listener().unwrap();
+        }
 
         Tool::Query {
             query_type,

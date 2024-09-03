@@ -4,4 +4,5 @@
 
 #![feature(pattern)]
 
+pub mod profile;
 pub mod query;
