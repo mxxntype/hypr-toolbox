@@ -22,6 +22,7 @@ option_if_let_else = { level = "allow", priority = 1 }
 or_fun_call = { level = "allow", priority = 1 }
 
 [dependencies]
+bon = "2.1.0"
 clap = { version = "4.5.16", features = ["derive", "color"] }
 color-eyre = "0.6.3"
 hyprland = { git = "https://github.com/hyprland-community/hyprland-rs", branch = "master" }
