@@ -29,14 +29,12 @@ pub enum Tool {
     /// `xwayland:force_zero_scaling = true` when and only when you're
     /// on workspace #7.
     ///
-    /// TODO: Well, actually implement.
+    /// TODO:
     /// - [ ] More conditions
     /// - [ ] Run arbitrary commands
     Profile {},
 
     /// Query the compositor for information, once or subscribe-style.
-    ///
-    /// TODO: Well, actually implement.
     Query {
         /// The type of query that should be performed.
         #[command(subcommand)]
@@ -58,8 +56,12 @@ pub enum Tool {
 /// Types of queries that the `query` tool can perform.
 #[derive(Debug, Clone, PartialEq, Eq, Subcommand)]
 pub enum QueryType {
+    /// Get the currently focused window.
+    ///
+    /// WARN: Currently unusable because of an issue with the [`hyprland`] crate.
     ActiveWindow,
 
+    /// Get the ID of the currently focused workspace.
     ActiveWorkspace,
 
     /// Get the current keyboard layout name.
