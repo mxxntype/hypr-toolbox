@@ -1,6 +1,8 @@
 use hyprland::{event_listener::EventListener, keyword::Keyword, shared::WorkspaceType};
+use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, process::Command};
 
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
 pub struct Config {
     output: String,
     default_scale: f64,
@@ -48,4 +50,29 @@ pub fn setup_listener(event_listener: &mut EventListener, config: Config) {
                 });
         }
     });
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::profile::Config;
+
+    #[test]
+    fn read_config_from_file() {
+        const CONFIG_STR: &str = r#"
+            {
+                "output": "eDP-1",
+                "default_scale": 1.5,
+                "workspace_scale_map": {
+                    "7": 2.0,
+                    "10": 1.0
+                },
+                "xwayland_scaling_workspaces": [
+                    7
+                ]
+            }
+        "#;
+
+        let config: Config = serde_json::from_str(CONFIG_STR).unwrap();
+        assert_eq!(config, Config::default());
+    }
 }
