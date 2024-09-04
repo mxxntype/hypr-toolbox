@@ -2,11 +2,11 @@ mod cli;
 
 use crate::cli::{Options, QueryType, Tool};
 use clap::Parser;
+use hypr_toolbox::config::ExternalConfig;
 use hypr_toolbox::profile::{self, Config};
 use hypr_toolbox::query::{active_workspace, keyboard, workspaces};
 use hyprland::event_listener::EventListener;
 use serde_json::to_string_pretty as to_json;
-use std::fs;
 
 // With the "subscribe" behaviour, its often needed to create a "handler"
 // for the desired event, call it once right away and reuse it in hyprland's
@@ -23,36 +23,11 @@ fn main() {
     let _ =
         color_eyre::install().inspect_err(|error| eprintln!("Couldn't set up color-eyre: {error}"));
     let options = Options::parse();
-
     let mut event_listener = EventListener::new();
+
     match options.tool {
         Tool::Profile {} => {
-            let config = match dirs::config_dir() {
-                None => Config::default(),
-                Some(mut xdg_config_dir) => {
-                    xdg_config_dir.push("hypr_toolbox");
-                    let _ = fs::create_dir_all(&xdg_config_dir);
-
-                    let mut config_file_path = xdg_config_dir.clone();
-                    config_file_path.push("profile.json");
-
-                    if fs::exists(&config_file_path).is_ok_and(|file_exists| !file_exists) {
-                        let default_config = Config::default();
-                        let default_config = serde_json::to_string_pretty(&default_config).unwrap();
-                        let _ = fs::write(&config_file_path, default_config).inspect_err(|error| {
-                            eprintln!("Could not create default config file: {error:?}");
-                        });
-                    }
-
-                    let config = fs::read_to_string(&config_file_path)
-                        .inspect_err(|error| eprintln!("Could not read config file: {error:?}"))
-                        .unwrap_or_default();
-                    serde_json::from_str(&config)
-                        .inspect_err(|error| eprintln!("Could not deserialize config: {error:?}"))
-                        .unwrap_or_default()
-                }
-            };
-
+            let config = Config::setup_default_or_read_existing().unwrap_or_default();
             profile::setup_listener(&mut event_listener, config);
             event_listener.start_listener().unwrap();
         }
@@ -63,8 +38,7 @@ fn main() {
         } => {
             match query_type {
                 QueryType::ActiveWindow => {
-                    panic!("This version of the hyprland crate seems to panic inside the `Client::get_active()` function.");
-                    // dbg!(&active_window::get());
+                    unimplemented!("The hyprland crate seems to panic inside the `Client::get_active()` function.");
                 }
 
                 QueryType::ActiveWorkspace => handle_active_workspace()

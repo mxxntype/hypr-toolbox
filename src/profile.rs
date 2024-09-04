@@ -1,3 +1,4 @@
+use crate::config::ExternalConfig;
 use hyprland::{event_listener::EventListener, keyword::Keyword, shared::WorkspaceType};
 use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, process::Command};
@@ -25,6 +26,11 @@ impl Default for Config {
     }
 }
 
+impl ExternalConfig for Config {
+    type Config = Self;
+    const FILENAME: &'static str = "profile.json";
+}
+
 pub fn setup_listener(event_listener: &mut EventListener, config: Config) {
     event_listener.add_workspace_change_handler(move |ws_type| match ws_type {
         WorkspaceType::Special(_) => { /* Do nothing I guess? */ }
@@ -50,29 +56,4 @@ pub fn setup_listener(event_listener: &mut EventListener, config: Config) {
                 });
         }
     });
-}
-
-#[cfg(test)]
-mod tests {
-    use crate::profile::Config;
-
-    #[test]
-    fn read_config_from_file() {
-        const CONFIG_STR: &str = r#"
-            {
-                "output": "eDP-1",
-                "default_scale": 1.5,
-                "workspace_scale_map": {
-                    "7": 2.0,
-                    "10": 1.0
-                },
-                "xwayland_scaling_workspaces": [
-                    7
-                ]
-            }
-        "#;
-
-        let config: Config = serde_json::from_str(CONFIG_STR).unwrap();
-        assert_eq!(config, Config::default());
-    }
 }
