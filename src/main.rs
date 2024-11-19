@@ -19,7 +19,7 @@ macro_rules! create_and_call_handler {
     }};
 }
 
-fn main() {
+fn main() -> Result<(), color_eyre::eyre::Report> {
     let _ =
         color_eyre::install().inspect_err(|error| eprintln!("Couldn't set up color-eyre: {error}"));
     let options = Options::parse();
@@ -29,7 +29,7 @@ fn main() {
         Tool::Profile {} => {
             let config = Config::setup_default_or_read_existing().unwrap_or_default();
             profile::setup_listener(&mut event_listener, config);
-            event_listener.start_listener().unwrap();
+            event_listener.start_listener()?;
         }
 
         Tool::Query {
@@ -60,10 +60,12 @@ fn main() {
             };
 
             if subscribe {
-                event_listener.start_listener().unwrap();
+                event_listener.start_listener()?;
             }
         }
-    }
+    };
+
+    Ok(())
 }
 
 #[bon::builder]

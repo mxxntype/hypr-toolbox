@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::{fs, io, path::PathBuf};
+use tap::tap::{Tap, TapOptional};
 
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
@@ -21,19 +22,14 @@ pub trait ExternalConfig {
     #[must_use]
     fn directory() -> PathBuf {
         dirs::config_dir()
-            .map(|mut path| {
-                path.push(env!("CARGO_CRATE_NAME"));
-                path
-            })
+            .tap_some_mut(|path| path.push(env!("CARGO_CRATE_NAME")))
             .expect("Couldn't find where to store config files - where's ~/.config?")
     }
 
     /// Get the full path to the configuration file.
     #[must_use]
     fn full_path() -> PathBuf {
-        let mut path = Self::directory();
-        path.push(Self::FILENAME);
-        path
+        Self::directory().tap_mut(|path| path.push(Self::FILENAME))
     }
 
     /// Write the default configuration to disk as JSON.
