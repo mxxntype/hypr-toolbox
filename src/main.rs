@@ -6,6 +6,7 @@ use hypr_toolbox::config::ExternalConfig;
 use hypr_toolbox::profile::{self, Config};
 use hypr_toolbox::query::{active_workspace, keyboard, workspaces};
 use hyprland::event_listener::EventListener;
+use hyprland::shared::WorkspaceType;
 use serde_json::to_string_pretty as to_json;
 
 // With the "subscribe" behaviour, its often needed to create a "handler"
@@ -71,10 +72,19 @@ fn main() -> Result<(), color_eyre::eyre::Report> {
 #[bon::builder]
 fn handle_active_workspace(subscribe: bool, event_listener: &mut EventListener) {
     println!("{}", &active_workspace::get().unwrap().id);
-
     if subscribe {
-        event_listener.add_workspace_change_handler(|ws| println!("{ws}"));
-        event_listener.add_active_monitor_change_handler(|ws| println!("{}", ws.workspace));
+        event_listener.add_workspace_changed_handler(|ws| println!("{}", ws.id));
+        event_listener.add_active_monitor_changed_handler(|monitor_event| {
+            let ws_id = monitor_event
+                .workspace_name
+                .and_then(|ws_type| match ws_type {
+                    WorkspaceType::Regular(id) => Some(id),
+                    WorkspaceType::Special(_) => None,
+                });
+            if let Some(id) = ws_id {
+                println!("{id}");
+            }
+        });
     }
 }
 
@@ -92,7 +102,7 @@ fn handle_keyboard_layout(
     });
 
     if subscribe {
-        event_listener.add_keyboard_layout_change_handler(move |_| handler());
+        event_listener.add_layout_changed_handler(move |_| handler());
     }
 }
 
