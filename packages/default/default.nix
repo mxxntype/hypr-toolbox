@@ -1,13 +1,15 @@
-{
-    inputs,
-    pkgs,
-    ...
-}:
+{ inputs, pkgs, ... }:
 
-(pkgs.callPackage inputs.naersk {}).buildPackage {
-    src = ../..;
+let
+    toolchain = inputs.fenix.packages.${pkgs.system}.fromToolchainFile {
+        file = ../../rust-toolchain.toml;
+        sha256 = "sha256-xpStU6xQanJNSXnOU9AY7nz9Ycjlv0/eQkNHP1LSBoc=";
+    };
 
-    # NOTE: If your application uses OpenSSL (making the build process fail), try:
-    # nativeBuildInputs = with pkgs; [ pkg-config ];
-    # buildInputs = with pkgs; [ openssl ];
-}
+    naersk' = pkgs.callPackage inputs.naersk {
+        cargo = toolchain;
+        rustc = toolchain;
+    };
+in
+
+naersk'.buildPackage { src = ../..; }
