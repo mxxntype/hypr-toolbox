@@ -42,10 +42,10 @@ pub enum Tool {
 
         /// Whether to wait for subsequent changes or query once and exit.
         ///
-        /// Without this flag, the tool will only check the check the state once,
-        /// return it to the issuer and exit. If this flag will passed, changes
-        /// in relevant state will be streamed back to the user, an the tool will
-        /// not exit until told to.
+        /// Without this flag, the tool will only check the check the state
+        /// once, return it to the issuer and exit. If this flag will
+        /// passed, changes in relevant state will be streamed back to
+        /// the user, an the tool will not exit until told to.
         ///
         /// Most useful for listen-like data in status bars and stuff alike.
         #[arg(short, long, default_value_t = false)]
@@ -58,7 +58,8 @@ pub enum Tool {
 pub enum QueryType {
     /// Get the currently focused window.
     ///
-    /// WARN: Currently unusable because of an issue with the [`hyprland`] crate.
+    /// WARN: Currently unusable because of an issue with the [`hyprland`]
+    /// crate.
     ActiveWindow,
 
     /// Get the ID of the currently focused workspace.

@@ -1,7 +1,8 @@
 //! ## `hypr-toolbox`
 //!
-//! An abomination of various scripts and actions for Hyprland, packaged as a single Rust CLI tool.
-//! Run the binary with `--help` to figure out how to use the different tools.
+//! An abomination of various scripts and actions for Hyprland, packaged as a
+//! single Rust CLI tool. Run the binary with `--help` to figure out how to use
+//! the different tools.
 //!
 //! ## `query` - Query the compositor for information, once or subscribe-style.
 //!
@@ -16,8 +17,8 @@
 //!
 //! ## `profile` - Detect user actions and adapt to them on-the-fly.
 //!
-//! The configuration for this tool lives in `${XDG_CONFIG_HOME}/hypr_toolbox/profile.json`
-//! and looks like this:
+//! The configuration for this tool lives in
+//! `${XDG_CONFIG_HOME}/hypr_toolbox/profile.json` and looks like this:
 //!
 //! ```json
 //! {
@@ -35,8 +36,8 @@
 //! If the user goes to workspace 7, set the scale to 2.0 and reset to 1.5 once
 //! the user goes to any other workspace. Same for workspace 10, except set the
 //! scale to 1.0 when there.
-//! Also, while on workspace 7, disable the `xwayland:force_zero_scaling` option.
-//! (Useful to force some games to run at a lower resolution)
+//! Also, while on workspace 7, disable the `xwayland:force_zero_scaling`
+//! option. (Useful to force some games to run at a lower resolution)
 
 #![feature(pattern)]
 

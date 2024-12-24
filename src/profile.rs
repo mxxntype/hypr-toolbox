@@ -1,7 +1,10 @@
 use crate::config::ExternalConfig;
-use hyprland::{event_listener::EventListener, keyword::Keyword, shared::WorkspaceType};
+use hyprland::event_listener::EventListener;
+use hyprland::keyword::Keyword;
+use hyprland::shared::WorkspaceType;
 use serde::{Deserialize, Serialize};
-use std::{collections::HashMap, process::Command};
+use std::collections::HashMap;
+use std::process::Command;
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
 pub struct Config {
@@ -32,7 +35,7 @@ impl ExternalConfig for Config {
 }
 
 pub fn setup_listener(event_listener: &mut EventListener, config: Config) {
-    event_listener.add_workspace_change_handler(move |ws_type| match ws_type {
+    event_listener.add_workspace_changed_handler(move |ws_event| match ws_event.name {
         WorkspaceType::Special(_) => { /* Do nothing I guess? */ }
         WorkspaceType::Regular(id_string) => {
             let id = id_string.parse::<u8>().unwrap_or(1);

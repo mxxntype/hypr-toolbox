@@ -1,4 +1,5 @@
-use hyprland::{data::Workspace, shared::HyprDataActive};
+use hyprland::data::Workspace;
+use hyprland::shared::HyprDataActive;
 
 /// .
 ///

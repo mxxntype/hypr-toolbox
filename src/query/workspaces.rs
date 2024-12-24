@@ -19,9 +19,9 @@ use hyprland::shared::{Address, HyprData};
 /// ```rust
 /// // This doctest will fail if Hyprland is not running!
 ///
+/// use hypr_toolbox::tools::query::workspaces;
 /// use hyprland::data::{Workspace, Workspaces};
 /// use hyprland::shared::{Address, HyprData};
-/// use hypr_toolbox::tools::query::workspaces;
 ///
 /// # fn main() -> hyprland::Result<()> {
 /// let workspaces: Vec<Workspace> = workspaces::get(false)?;

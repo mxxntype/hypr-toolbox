@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
-use std::{fs, io, path::PathBuf};
+use std::path::PathBuf;
+use std::{fs, io};
 use tap::tap::{Tap, TapOptional};
 
 #[derive(thiserror::Error, Debug)]
@@ -18,7 +19,8 @@ pub trait ExternalConfig {
     /// The name of the file that holds the config for this tool.
     const FILENAME: &'static str;
 
-    /// Get the path to the directory that should contain the configuration file.
+    /// Get the path to the directory that should contain the configuration
+    /// file.
     #[must_use]
     fn directory() -> PathBuf {
         dirs::config_dir()

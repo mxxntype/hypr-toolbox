@@ -1,4 +1,5 @@
-use hyprland::{data::Client, shared::HyprDataActiveOptional};
+use hyprland::data::Client;
+use hyprland::shared::HyprDataActiveOptional;
 
 /// .
 ///
