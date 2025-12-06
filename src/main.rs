@@ -1,13 +1,14 @@
 mod cli;
 
-use crate::cli::{Options, QueryType, Tool};
+use bon::builder;
 use clap::Parser;
 use hypr_toolbox::config::ExternalConfig;
 use hypr_toolbox::profile::{self, Config};
 use hypr_toolbox::query::{active_workspace, keyboard, workspaces};
 use hyprland::event_listener::EventListener;
 use hyprland::shared::WorkspaceType;
-use serde_json::to_string_pretty as to_json;
+
+use crate::cli::{Options, QueryType, Tool};
 
 // With the "subscribe" behaviour, its often needed to create a "handler"
 // for the desired event, call it once right away and reuse it in hyprland's
@@ -21,8 +22,8 @@ macro_rules! create_and_call_handler {
 }
 
 fn main() -> Result<(), color_eyre::eyre::Report> {
-    let _ =
-        color_eyre::install().inspect_err(|error| eprintln!("Couldn't set up color-eyre: {error}"));
+    let _ = color_eyre::install()
+        .inspect_err(|error| eprintln!("Failed to set up color-eyre: {error}"));
     let options = Options::parse();
     let mut event_listener = EventListener::new();
 
@@ -58,18 +59,18 @@ fn main() -> Result<(), color_eyre::eyre::Report> {
                     .skip_missing(skip_missing)
                     .event_listener(&mut event_listener)
                     .call(),
-            };
+            }
 
             if subscribe {
                 event_listener.start_listener()?;
             }
         }
-    };
+    }
 
     Ok(())
 }
 
-#[bon::builder]
+#[builder]
 fn handle_active_workspace(subscribe: bool, event_listener: &mut EventListener) {
     println!("{}", &active_workspace::get().unwrap().id);
     if subscribe {
@@ -88,17 +89,16 @@ fn handle_active_workspace(subscribe: bool, event_listener: &mut EventListener) 
     }
 }
 
-#[bon::builder]
+#[builder]
 fn handle_keyboard_layout(
     name_pattern: String,
     subscribe: bool,
     event_listener: &mut EventListener,
 ) {
     let handler = create_and_call_handler!(move || {
-        println!(
-            "{}",
-            to_json(&keyboard::get(name_pattern.as_str()).unwrap()).unwrap()
-        );
+        let kbd_layout_name = keyboard::get(name_pattern.as_str()).unwrap();
+        let kbd_layout_json = serde_json::to_string_pretty(&kbd_layout_name).unwrap();
+        println!("{kbd_layout_json}");
     });
 
     if subscribe {
@@ -106,13 +106,12 @@ fn handle_keyboard_layout(
     }
 }
 
-#[bon::builder]
+#[builder]
 fn handle_workspaces(skip_missing: bool, subscribe: bool, event_listener: &mut EventListener) {
     let handler = create_and_call_handler!(move || {
-        println!(
-            "{}",
-            to_json(&workspaces::get(skip_missing).unwrap()).unwrap()
-        );
+        let workspaces = workspaces::get(skip_missing).unwrap();
+        let workspaces_json = serde_json::to_string_pretty(&workspaces).unwrap();
+        println!("{workspaces_json}",);
     });
 
     if subscribe {

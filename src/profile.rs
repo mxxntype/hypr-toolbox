@@ -1,10 +1,12 @@
-use crate::config::ExternalConfig;
+use std::collections::HashMap;
+use std::process::Command;
+
 use hyprland::event_listener::EventListener;
 use hyprland::keyword::Keyword;
 use hyprland::shared::WorkspaceType;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
-use std::process::Command;
+
+use crate::config::ExternalConfig;
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
 pub struct Config {

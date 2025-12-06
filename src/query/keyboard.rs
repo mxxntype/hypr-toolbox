@@ -1,6 +1,7 @@
+use std::str::pattern::Pattern;
+
 use hyprland::data::Devices;
 use hyprland::shared::HyprData;
-use std::str::pattern::Pattern;
 
 /// Get the current keyboard layout name.
 ///

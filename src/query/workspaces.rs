@@ -45,7 +45,7 @@ pub fn get(skip_missing: bool) -> hyprland::Result<Vec<Workspace>> {
                 fullscreen: false,
                 last_window: Address::new(String::new()),
                 last_window_title: String::new(),
-                monitor_id: 0,
+                monitor_id: None,
             });
         }
     }

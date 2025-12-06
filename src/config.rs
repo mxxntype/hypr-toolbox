@@ -1,6 +1,7 @@
-use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::{fs, io};
+
+use serde::{Deserialize, Serialize};
 use tap::tap::{Tap, TapOptional};
 
 #[derive(thiserror::Error, Debug)]
